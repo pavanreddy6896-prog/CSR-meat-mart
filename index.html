@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSR Meat Mart | Order Online</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f7f7f7;color:#222}
+header{background:#b40000;color:white;text-align:center;padding:28px 16px}
+header h1{margin:0;font-size:30px} header p{margin:8px 0 0}
+main{max-width:600px;margin:20px auto;padding:0 15px}
+.card{background:white;border-radius:16px;padding:18px;margin-bottom:15px;box-shadow:0 2px 10px #0001}
+.item{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid #eee}
+.item:last-child{border-bottom:0}.price{font-weight:bold}
+.qty{display:flex;gap:8px;align-items:center}.qty button{width:34px;height:34px;border:0;border-radius:8px;background:#b40000;color:white;font-size:20px}
+input,textarea{width:100%;box-sizing:border-box;padding:12px;margin:7px 0;border:1px solid #ddd;border-radius:9px;font-size:15px}
+.order{width:100%;padding:15px;background:#128c7e;color:white;border:0;border-radius:10px;font-size:17px;font-weight:bold}
+.total{font-size:20px;font-weight:bold;text-align:right;margin:15px 0}
+.small{font-size:13px;color:#666}
+</style>
+</head>
+<body>
+<header><h1>CSR MEAT MART</h1><p>Chicken • Mutton • Fish</p><p>Fresh meat delivered to your doorstep</p></header>
+<main>
+<div class="card">
+<h2>Chicken</h2>
+<div class="item"><div><b>Chicken Skinout</b><div class="price">₹280 / kg</div></div><div class="qty"><button onclick="change('skinout',-0.5)">−</button><span id="skinout">0</span><button onclick="change('skinout',0.5)">+</button></div></div>
+<div class="item"><div><b>Chicken With Skin</b><div class="price">₹260 / kg</div></div><div class="qty"><button onclick="change('withskin',-0.5)">−</button><span id="withskin">0</span><button onclick="change('withskin',0.5)">+</button></div></div>
+<div class="small">Quantity can be selected in 0.5 kg steps.</div>
+</div>
+<div class="card">
+<h2>Delivery Details</h2>
+<input id="name" placeholder="Your name">
+<input id="address" placeholder="Delivery address">
+<input id="phone" placeholder="Your phone number">
+<textarea id="notes" placeholder="Any special instructions?"></textarea>
+<div class="total">Total: ₹<span id="total">0</span></div>
+<button class="order" onclick="orderWhatsApp()">Order on WhatsApp</button>
+<p class="small">No delivery charges.</p>
+</div>
+</main>
+<script>
+let q={skinout:0,withskin:0};
+function change(k,v){q[k]=Math.max(0,q[k]+v);document.getElementById(k).textContent=q[k].toFixed(1).replace('.0','');update();}
+function update(){document.getElementById('total').textContent=(q.skinout*280+q.withskin*260).toFixed(0);}
+function orderWhatsApp(){
+ let name=document.getElementById('name').value.trim(), address=document.getElementById('address').value.trim(), phone=document.getElementById('phone').value.trim(), notes=document.getElementById('notes').value.trim();
+ if(!name||!address){alert('Please enter your name and delivery address.');return;}
+ if(q.skinout===0&&q.withskin===0){alert('Please select at least one item.');return;}
+ let m=`Hello CSR Meat Mart! 👋%0A%0AI would like to place an order:%0A`;
+ if(q.skinout)m+=`Chicken Skinout: ${q.skinout} kg × ₹280 = ₹${q.skinout*280}%0A`;
+ if(q.withskin)m+=`Chicken With Skin: ${q.withskin} kg × ₹260 = ₹${q.withskin*260}%0A`;
+ m+=`%0ATotal: ₹${q.skinout*280+q.withskin*260}%0ADelivery charges: ₹0%0A%0AName: ${name}%0APhone: ${phone}%0AAddress: ${address}`;
+ if(notes)m+=`%0ANotes: ${notes}`;
+ window.open('https://wa.me/919019384936?text='+encodeURIComponent(decodeURIComponent(m)),'_blank');
+}
+</script>
+</body>
+</html>
